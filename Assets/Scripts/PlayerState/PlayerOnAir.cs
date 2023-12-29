@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class DoubleJump : PlayerState
+public class PlayerOnAir : PlayerState
 {
-    public DoubleJump(Player player) : base(player)
+    public PlayerOnAir(Player player) : base(player)
     {
     }
 
@@ -16,26 +16,34 @@ public class DoubleJump : PlayerState
 
     public override void Enter()
     {
-        throw new System.NotImplementedException();
+        player.GetMove().SetAirAnim(true);
     }
 
     public override void Fire(InputValue value)
     {
-        throw new System.NotImplementedException();
+
     }
 
     public override void HorizonMove(InputValue value)
     {
-        throw new System.NotImplementedException();
+        float val = value.Get<float>();
+        player.GetMove().HorizonMove(val);
     }
 
     public override void Jump(InputValue value)
     {
-        throw new System.NotImplementedException();
+        if (value.isPressed)
+        {
+            player.GetMove().Jump();
+            player.ChangeState(PlayerStateType.OneJump);
+        }
     }
 
     public override void Update()
     {
-        throw new System.NotImplementedException();
+        if (player.GetMove().IsGrounded)
+        {
+            player.ChangeState(PlayerStateType.Idle);
+        }
     }
 }

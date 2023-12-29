@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Duck : PlayerState
+public class PlayerDuck : PlayerState
 {
-    public Duck(Player player) : base(player)
+    public PlayerDuck(Player player) : base(player)
     {
     }
 

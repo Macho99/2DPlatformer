@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Hurt : PlayerState
+public class PlayerAttackState : PlayerState
 {
-    public Hurt(Player player) : base(player)
+    public PlayerAttackState(Player player) : base(player)
     {
     }
 

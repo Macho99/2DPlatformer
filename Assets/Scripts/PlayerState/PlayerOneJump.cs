@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class OnAir : PlayerState
+public class PlayerOneJump : PlayerState
 {
-    public OnAir(Player player) : base(player)
+    public PlayerOneJump(Player player) : base(player)
     {
     }
 
@@ -21,7 +21,7 @@ public class OnAir : PlayerState
 
     public override void Fire(InputValue value)
     {
-
+        //nothing
     }
 
     public override void HorizonMove(InputValue value)
@@ -32,11 +32,7 @@ public class OnAir : PlayerState
 
     public override void Jump(InputValue value)
     {
-        if (value.isPressed)
-        {
-            player.GetMove().Jump();
-            player.ChangeState(PlayerStateType.OneJump);
-        }
+        //nothing
     }
 
     public override void Update()

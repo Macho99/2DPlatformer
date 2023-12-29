@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Attack : PlayerState
+public class PlayerDoubleJump : PlayerState
 {
-    public Attack(Player player) : base(player)
+    public PlayerDoubleJump(Player player) : base(player)
     {
     }
 

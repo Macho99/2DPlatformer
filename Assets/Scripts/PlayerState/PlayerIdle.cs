@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Idle : PlayerState
+public class PlayerIdle : PlayerState
 {
     bool jumpPressed;
-    public Idle(Player player) : base(player) { }
+    public PlayerIdle(Player player) : base(player) { }
 
     public override void Enter()
     {

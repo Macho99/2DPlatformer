@@ -8,26 +8,31 @@ public class Player : MonoBehaviour
     PlayerMove playerMove;
 
     PlayerState curState;
+    Rigidbody2D rb;
     PlayerState[] states;
     [SerializeField] string curStateStr;
 
+    Collider2D col;
+
     private void Awake()
     {
+        rb = GetComponent<Rigidbody2D>();
         playerMove = GetComponent<PlayerMove>();
+        col = GetComponent<Collider2D>();
 
         states = new PlayerState[(int) PlayerStateType.Size];
-        states[0] = new Idle(this);
-        states[1] = new Walk(this);
-        states[2] = new Duck(this);
-        states[3] = new OnAir(this);
-        states[4] = new OneJump(this);
-        states[5] = new DoubleJump(this);
-        states[6] = new Hurt(this);
-        states[7] = new Attack(this);
+        states[0] = new PlayerIdle(this);
+        states[1] = new PlayerWalk(this);
+        states[2] = new PlayerDuck(this);
+        states[3] = new PlayerOnAir(this);
+        states[4] = new PlayerOneJump(this);
+        states[5] = new PlayerDoubleJump(this);
+        states[6] = new PlayerHurt(this);
+        states[7] = new PlayerAttackState(this);
+
         curState = states[0];
         curStateStr = curState.ToString();
     }
-
 
     public void ChangeState(PlayerStateType type)
     {
@@ -46,7 +51,7 @@ public class Player : MonoBehaviour
         curState.Update();
     }
 
-    private void OnJump(InputValue value) { 
+    private void OnJump(InputValue value) {
         curState.Jump(value);
     }
     private void OnFire(InputValue value)
@@ -60,5 +65,30 @@ public class Player : MonoBehaviour
     private void OnHorizon(InputValue value)
     {
         curState.HorizonMove(value);
+    }
+
+    public void SetTriggerTrue()
+    {
+        if (rb.velocity.y > -0.01f) //상승 중일때만
+            col.isTrigger = true;
+    }
+
+    public void SetColTriggerFalse()
+    {
+        col.isTrigger = false;
+    }
+
+    public bool CheckCollisioning()
+    {
+        Collider2D[] cols =  new Collider2D[1];
+        return col.GetContacts(cols) < 1;
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
+        {
+            col.isTrigger = false;
+        }
     }
 }

@@ -4,20 +4,27 @@ using UnityEngine;
 
 public class Thrower : MonoBehaviour
 {
-    [SerializeField] GameObject player;
+    [SerializeField] Player player;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
         {
-            player.layer = LayerMask.NameToLayer("Throughing");
+            player.SetTriggerTrue();
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
         {
-            player.layer = LayerMask.NameToLayer("Normal");
+            player.SetTriggerTrue();
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if( false == player.CheckCollisioning())
+        {
+            player.SetColTriggerFalse();
         }
     }
 }

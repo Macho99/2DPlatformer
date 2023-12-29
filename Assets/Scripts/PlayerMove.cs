@@ -10,15 +10,18 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpForce = 3f;
 
+    private Player player;
     private SpriteRenderer spRenderer;
     private Rigidbody2D rb;
     private Animator anim;
     private Coroutine moveCoroutine;
+    private Coroutine GroundCheckCoroutine;
 
     public bool IsGrounded {  get ; private set; }
 
     private void Awake()
     {
+        player = GetComponent<Player>();
         anim = GetComponent<Animator>();
         spRenderer = GetComponentInChildren<SpriteRenderer>();
         rb= GetComponent<Rigidbody2D>();
@@ -63,7 +66,7 @@ public class PlayerMove : MonoBehaviour
     public void Down()
     {
         IsGrounded = false;
-        gameObject.layer = LayerMask.NameToLayer("Throughing");
+        player.SetTriggerTrue();
     }
 
     private IEnumerator CoHorizonMove(int val)
@@ -91,16 +94,20 @@ public class PlayerMove : MonoBehaviour
     {
         if(collision.collider.gameObject.layer == LayerMask.NameToLayer("Platform"))
         {
-            StartCoroutine(CoCheckVel());
+            GroundCheckCoroutine = StartCoroutine(CoGroundCheck());
         }
     }
 
-    IEnumerator CoCheckVel()
+    IEnumerator CoGroundCheck()
     {
-        yield return null;
-        if(rb.velocity.y < 0.1f)
+        while(true)
         {
-            IsGrounded = true;
+            yield return null;
+            if (rb.velocity.y < 0.1f)
+            {
+                IsGrounded = true;
+                break;
+            }
         }
     }
 
@@ -117,6 +124,11 @@ public class PlayerMove : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
+        if(GroundCheckCoroutine != null)
+        {
+            StopCoroutine(GroundCheckCoroutine);
+        }
+
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Platform"))
         {
             IsGrounded = false;

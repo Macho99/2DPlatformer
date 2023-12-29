@@ -4,10 +4,10 @@ using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Walk : PlayerState
+public class PlayerWalk : PlayerState
 {
     bool jumpPressed = false;
-    public Walk(Player player) : base(player)
+    public PlayerWalk(Player player) : base(player)
     {
     }
 
