@@ -10,7 +10,6 @@ public class PlayerIdle : PlayerState
 
     public override void Enter()
     {
-        player.GetMove().SetAirAnim(false);
         jumpPressed = false;
 
         if (true == downPressed)
@@ -66,6 +65,10 @@ public class PlayerIdle : PlayerState
                 player.ChangeState(PlayerStateType.OnAir);
             }
         }
+        float velX = player.GetVel().x;
+        if (velX * velX > 0.01f)
+        {
+            player.ChangeState(PlayerStateType.Walk);
+        }
     }
-
 }

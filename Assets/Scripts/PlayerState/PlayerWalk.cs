@@ -18,7 +18,6 @@ public class PlayerWalk : PlayerState
 
     public override void Enter()
     {
-        player.GetMove().SetAirAnim(false);
         jumpPressed = false;
     }
 

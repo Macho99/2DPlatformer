@@ -14,14 +14,13 @@ public class PlayerDuck : PlayerState
         base.Down(value);
         if (value.isPressed == false)
         {
-            player.GetMove().SetDuckAnim(false);
             player.ChangeState(PlayerStateType.Idle);
         }
     }
 
     public override void Enter()
     {
-        player.GetMove().SetDuckAnim(true);
+
     }
 
     public override void Fire(InputValue value)
@@ -37,7 +36,6 @@ public class PlayerDuck : PlayerState
 
         if(val * val > 0.01f)
         {
-            player.GetMove().SetDuckAnim(false);
             player.ChangeState(PlayerStateType.Walk);
         }
     }
@@ -47,7 +45,6 @@ public class PlayerDuck : PlayerState
         if (value.isPressed)
         {
             player.GetMove().Down();
-            player.GetMove().SetDuckAnim(false);
             player.ChangeState(PlayerStateType.OneJump);
         }
     }

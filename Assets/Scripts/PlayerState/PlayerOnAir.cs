@@ -16,7 +16,6 @@ public class PlayerOnAir : PlayerState
 
     public override void Enter()
     {
-        player.GetMove().SetAirAnim(true);
     }
 
     public override void Fire(InputValue value)

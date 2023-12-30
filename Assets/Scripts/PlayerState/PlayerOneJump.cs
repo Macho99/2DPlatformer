@@ -16,7 +16,6 @@ public class PlayerOneJump : PlayerState
 
     public override void Enter()
     {
-        player.GetMove().SetAirAnim(true);
     }
 
     public override void Fire(InputValue value)

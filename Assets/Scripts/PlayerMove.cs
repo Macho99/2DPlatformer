@@ -9,6 +9,7 @@ public class PlayerMove : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpForce = 3f;
+    [SerializeField] private float limitPosX = 7.5f;
 
     private Player player;
     private SpriteRenderer spRenderer;
@@ -16,8 +17,13 @@ public class PlayerMove : MonoBehaviour
     private Animator anim;
     private Coroutine moveCoroutine;
     private Coroutine GroundCheckCoroutine;
+    private Collider2D col;
 
-    public bool IsGrounded {  get ; private set; }
+    public bool isGrounded;
+    public bool IsGrounded { 
+        get { return isGrounded; }
+        private set { isGrounded = value; }
+    }
 
     private void Awake()
     {
@@ -25,6 +31,7 @@ public class PlayerMove : MonoBehaviour
         anim = GetComponent<Animator>();
         spRenderer = GetComponentInChildren<SpriteRenderer>();
         rb= GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
     }
 
     //private void OnHorizon(InputValue value)
@@ -45,7 +52,6 @@ public class PlayerMove : MonoBehaviour
 
     public void HorizonMove(float val)
     {
-        anim.SetFloat("Speed", val * val);
         if (val == 0f)
         {
             if (moveCoroutine != null)
@@ -60,13 +66,23 @@ public class PlayerMove : MonoBehaviour
 
     public void Jump()
     {
+        rb.velocity = new Vector2(rb.velocity.x, 0f);
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
     }
 
     public void Down()
     {
-        IsGrounded = false;
-        player.SetTriggerTrue();
+        ContactPoint2D[] contactPoints = new ContactPoint2D[10];
+        int num = col.GetContacts(contactPoints);
+        for(int i = 0; i < num; i++) 
+        {
+            if (contactPoints[i].collider.gameObject.layer == LayerMask.NameToLayer("Platform"))
+            {
+                IsGrounded = false;
+                player.SetTriggerTrue();
+                break;
+            }
+        }
     }
 
     private IEnumerator CoHorizonMove(int val)
@@ -80,6 +96,12 @@ public class PlayerMove : MonoBehaviour
 
     private void FixedUpdate()
     {
+        float velY = rb.velocity.y;
+        if(velY * velY > 0.01f)
+        {
+            IsGrounded = false;
+        }
+
         if (rb.velocity.x < -0.01f)
         {
             spRenderer.flipX = true;
@@ -88,50 +110,58 @@ public class PlayerMove : MonoBehaviour
         {
             spRenderer.flipX = false;
         }
-    }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if(collision.collider.gameObject.layer == LayerMask.NameToLayer("Platform"))
+        if (rb.position.x < -limitPosX)
         {
-            GroundCheckCoroutine = StartCoroutine(CoGroundCheck());
-        }
-    }
-
-    IEnumerator CoGroundCheck()
-    {
-        while(true)
-        {
-            yield return null;
-            if (rb.velocity.y < 0.1f)
+            if(rb.velocity.x < 0f)
             {
-                IsGrounded = true;
-                break;
+                rb.velocity = new Vector2(0f, velY);
+            }
+        }
+        else if(rb.position.x > limitPosX)
+        {
+            if(rb.velocity.x > 0f)
+            {
+                rb.velocity = new Vector2(0f, velY);
             }
         }
     }
 
-    public void SetAirAnim(bool val)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        //if (anim == null) return;
-        anim.SetBool("OnAir", val);
+        //if(collision.collider.gameObject.layer == LayerMask.NameToLayer("Platform"))
+        //{
+        //    GroundCheckCoroutine = StartCoroutine(CoGroundCheck());
+        //}
     }
 
-    public void SetDuckAnim(bool val)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        anim.SetBool("Ducking", val);
+        float velY = rb.velocity.y;
+        if (velY * velY < 0.01f)
+        {
+            IsGrounded = true;
+        }
     }
+
+    //IEnumerator CoGroundCheck()
+    //{
+    //    while(true)
+    //    {
+    //        yield return null;
+    //        if (rb.velocity.y < 0.1f)
+    //        {
+    //            IsGrounded = true;
+    //            break;
+    //        }
+    //    }
+    //}
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if(GroundCheckCoroutine != null)
-        {
-            StopCoroutine(GroundCheckCoroutine);
-        }
-
-        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Platform"))
-        {
-            IsGrounded = false;
-        }
+        //if(GroundCheckCoroutine != null)
+        //{
+        //    StopCoroutine(GroundCheckCoroutine);
+        //}
     }
 }

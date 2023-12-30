@@ -22,7 +22,7 @@ public class Thrower : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if( false == player.CheckCollisioning())
+        if(false == player.CheckCollisioning())
         {
             player.SetColTriggerFalse();
         }

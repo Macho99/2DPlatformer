@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public enum PlayerStateType
 {
-    Idle,
+    Idle = 0,
     Walk,
     Duck,
     OnAir,

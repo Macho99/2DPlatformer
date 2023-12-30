@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     PlayerState curState;
     Rigidbody2D rb;
     PlayerState[] states;
+    Animator anim;
     [SerializeField] string curStateStr;
 
     Collider2D col;
@@ -19,6 +20,7 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         playerMove = GetComponent<PlayerMove>();
         col = GetComponent<Collider2D>();
+        anim = GetComponent<Animator>();
 
         states = new PlayerState[(int) PlayerStateType.Size];
         states[0] = new PlayerIdle(this);
@@ -38,12 +40,24 @@ public class Player : MonoBehaviour
     {
         curState = states[(int)type];
         curStateStr = curState.ToString();
+        SetAnimState(type);
+        //print(type.ToString());
         curState.Enter();
+    }
+
+    public void SetAnimState(PlayerStateType type)
+    {
+        anim.SetInteger("State", (int)type);
     }
 
     public PlayerMove GetMove()
     {
         return playerMove;
+    }
+
+    public Vector2 GetVel()
+    {
+        return rb.velocity;
     }
 
     private void Update()

@@ -4,13 +4,24 @@ using UnityEngine;
 
 public class BackgroundMover : MonoBehaviour
 {
-    [SerializeField] GameObject background;
-    [SerializeField] SpriteRenderer[] renderers;
-
+    private float height;
     private void Awake()
     {
-        renderers = background.GetComponentsInChildren<SpriteRenderer>();
+        height = GetComponent<Collider2D>().bounds.size.y;
     }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        Vector2 playerPos = collision.transform.position;
+        Vector2 pos = transform.position;
 
-
+        if(playerPos.y > pos.y)
+        {
+            pos.y += height * 2;
+        }
+        else
+        {
+            pos.y -= height * 2;
+        }
+        transform.position = pos;
+    }
 }
